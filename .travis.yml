@@ -1,0 +1,22 @@
+sudo: required
+services: 
+    - docker
+
+before_install: 
+    - docker build -t christian/react-test -f ./client/Dockerfile.dev ./client
+
+script: 
+    - docker run -e CI=true christian/react-test npm test 
+
+after_success: 
+    - docker build -t christian/multi-client ./client
+    - docker build -t christian/multi-nginx ./nginx
+    - docker build -t christian/multi-server ./server
+    - docker build -t christian/multi-worker ./worker
+    #Log in to Docker CLI 
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    # Take those images from the docker hub
+    - docker push christian/multi-client
+    - docker push christian/multi-nginx
+    - docker push christian/multi-server
+    - docker push christian/multi-worker
