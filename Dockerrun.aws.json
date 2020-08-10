@@ -1,0 +1,37 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+        {
+            "name": "client",
+            "image": "cgioia95/multi-client",
+            "hostname": "client",
+            "essential": false
+        },
+
+        {
+            "name": "server",
+            "image": "cgioia95/multi-client",
+            "hostname": "api",
+            "essential": false
+        },
+        {
+            "name": "worker",
+            "image": "cgioia95/multi-client",
+            "hostname": "worker",
+            "essential": "false"
+        }, 
+        {
+            "name": "nginx",
+            "image": "cgioia95/multi-nginx",
+            "hostname": "nginx",
+            "essential": true,
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "containerPort": 80
+                }
+            ], 
+            "links": ["client", "server"]
+        }
+    ]
+}
